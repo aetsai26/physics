@@ -13,9 +13,52 @@
         </style>
     </head>
     <body>
-        <canvas></canvas>       
+        <canvas id="myCanvas" width="480" height="320" style="border:1px solid #000000;"></canvas><br>
         <script type="text/javascript" >
             var vel={x: 0, y:0};
+            var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+            var x=canvas.width/2
+            var y=11;
+            var maxHeight=y;
+            var bMass=1;
+            var restitution=.75
+            var dx=5;
+            var dy=0;
+            var gravity=(9.81)/100;
+            function drawBall(x, y){
+            	ctx.beginPath();
+            	ctx.arc(x,y,10,0,2*Math.PI);
+            	ctx.fillstyle="#0033FF";
+            	ctx.fillStroke="#0033FF";
+            	ctx.Stroke="10";
+            	ctx.fill();
+            	ctx.closePath();
+            }
+            function draw(){
+                ctx.clearRect(0,0, canvas.width, canvas.height)
+                drawBall(x,y);
+                dy+=gravity;
+                
+                if(x+11>canvas.width || x-11<0){
+                    dx=-dx*restitution;
+                }
+                
+                if(dy>-.5 || dy<.5){
+                    maxHeight=canvas.height/2;
+                }
+                if(y+10>canvas.height || y-10<0){
+                    dy=-dy*restitution;
+                }
+                y+=dy;
+                x+=dx
+                console.log(dy);
+                
+                
+                
+                
+            }
+            setInterval(draw,10);
              
         </script>
     </body>
