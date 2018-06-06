@@ -25,6 +25,11 @@
             var restitution=.75
             var dx=5;
             var dy=0;
+            var mx;
+            var my;
+            var angle=0;
+            var bx=canvas.width/2;
+            var by=canvas.height/2
             var gravity=(9.81)/100;
             function drawBall(x, y){
             	ctx.beginPath();
@@ -35,30 +40,78 @@
             	ctx.fill();
             	ctx.closePath();
             }
+            
+            
+            function drawTarget(x, y){
+                ctx.beginPath();
+                ctx.rect(x,y, 10, 40)
+                ctx.fill()
+                ctx.closePath()
+            }
+            
             function draw(){
                 ctx.clearRect(0,0, canvas.width, canvas.height)
                 drawBall(x,y);
+                drawTarget(bx, by)
                 dy+=gravity;
                 
                 if(x+11>canvas.width || x-11<0){
-                    dx=-dx*restitution;
+                    dx=-(dx*restitution);
                 }
                 
-                if(dy>-.5 || dy<.5){
-                    maxHeight=canvas.height/2;
+                if(x > bx && x < bx+10 && y > by && y < by+40){
+                    dx=-(dx*restitution);
+                    bx=Math.random()*canvas.width
+                    by=Math.random()*canvas.height
                 }
                 if(y+10>canvas.height || y-10<0){
-                    dy=-dy*restitution;
+                    dy=-(dy*restitution);
                 }
                 y+=dy;
                 x+=dx
-                console.log(dy);
-                
-                
-                
-                
+
             }
-            setInterval(draw,10);
+            
+            
+            function getPosition(el) {
+              var xPosition = 0;
+              var yPosition = 0;
+             
+              while (el) {
+                xPosition += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+                yPosition += (el.offsetTop - el.scrollTop + el.clientTop);
+                el = el.offsetParent;
+              }
+              return {
+                x: xPosition,
+                y: yPosition
+              };
+            }       
+            canvas.addEventListener("mousemove", setMousePosition, false);
+            
+            function setMousePosition(e) {
+                console.log('run')
+                mx = e.clientX - getPosition(canvas).x;
+                my=e.clientY-getPosition(canvas).y;
+                return{
+                    x:mx,
+                    y:my
+                }
+            }
+            
+            function init(){
+                ctx.clearRect(0,0,canvas.width, canvas.height)
+                ctx.beginPath()
+                drawBall(canvas.width/8, canvas.height/2);
+                ctx.lineTo(mx, my)
+                ctx.stroke();
+                ctx.closePath()
+            }
+            
+            setInterval(init, 10)
+            
+            
+    
              
         </script>
     </body>
