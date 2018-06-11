@@ -2,10 +2,7 @@
 <html>
     <head>
         <style type="text/css">
-            canvas{
-                width: 100%;
-                height: 100%;
-            }
+        
             body{
                 width:100%;
                 height: 100%;
@@ -13,27 +10,31 @@
         </style>
     </head>
     <body>
-        <canvas id="myCanvas" width="480" height="320" style="border:1px solid #000000;"></canvas><br>
+        <div id="container">
+            <canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;"></canvas><br>
+        </div>
         <p>Press Space to Launch the ball</p>
+        <p id="velocity"></p>
         <script type="text/javascript" >
             var canvas = document.getElementById("myCanvas");
             var ctx = canvas.getContext("2d");
             var x=canvas.width/8;
             var y=canvas.height/2;
             var maxHeight=y;
-            var bMass=1;
+            var bwidth=canvas.width/50;
+            var bheight=canvas.height/10;
+            var radius=bwidth;
             var restitution=.75
             var dx=5;
             var dy=0;
-            var mx;
-            var my;
+            var mousePos=getMousePos(canvas, "mousemove")
             var angle=0;
             var bx=Math.random()*canvas.width
             var by=Math.random()*canvas.height
             var gravity=(9.81)/100;
             function drawBall(x, y){
             	ctx.beginPath();
-            	ctx.arc(x,y,10,0,2*Math.PI);
+            	ctx.arc(x,y,radius,0,2*Math.PI);
             	ctx.fillstyle="#0033FF";
             	ctx.fillStroke="#0033FF";
             	ctx.Stroke="10";
@@ -44,7 +45,7 @@
             
             function drawTarget(x, y){
                 ctx.beginPath();
-                ctx.rect(x,y, 10, 40);
+                ctx.rect(x,y, bwidth, bheight);
                 ctx.fill();
                 ctx.closePath();
             }
@@ -55,61 +56,53 @@
                 drawTarget(bx, by);
                 dy+=gravity;
                 
-                if(x+12>canvas.width){
+                if(x+(radius+2)>canvas.width){
                     dx=-(dx*restitution);
-                    x=canvas.width-12;
+                    x=canvas.width-(radius+2);
                 }
-                else if(x-12<0){
+                else if(x-(radius+2)<0){
                     dx=-(dx*restitution);
-                    x=12;
+                    x=(radius+2);
+                }
+                if(y+(radius+2)>canvas.height){
+                    dy=-(dy*restitution);
+                    y=canvas.height-(radius+2);
+                }
+                else if(y-(radius+2)<0){
+                    dy=-(dy*restitution);
+                    y=radius;
                 }
                 
-                
-                if(x > bx && x < bx+10 && y > by && y < by+40){
+                if(collision(dx, dy)){
                     dx=-(dx*restitution);
                     bx=Math.random()*canvas.width;
                     by=Math.random()*canvas.height;
                 }
-                if(y+12>canvas.height){
-                    dy=-(dy*restitution);
-                    y=canvas.height-12;
-                }
-                else if(y-12<0){
-                    dy=-(dy*restitution);
-                    y=12;
-                }
-                
                 
                 
                 y+=dy;
                 x+=dx;
-
+                document.getElementById("velocity").innerHTML="x:"+dx.toString() +"y:"+dy.toString();
             }
             
             
-            function getPosition(el) {
-              var xPosition = 0;
-              var yPosition = 0;
-             
-              while (el) {
-                xPosition += (el.offsetLeft - el.scrollLeft + el.clientLeft);
-                yPosition += (el.offsetTop - el.scrollTop + el.clientTop);
-                el = el.offsetParent;
-              }
-              return {
-                x: xPosition,
-                y: yPosition
-              };
-            }       
-            canvas.addEventListener("mousemove", setMousePosition, false);
+            canvas.addEventListener("mousemove", function(e){
+                mousePos=getMousePos(canvas, e);
+            });
             
-            function setMousePosition(e) {
-                console.log('run');
-                mx = e.clientX - getPosition(canvas).x;
-                my=e.clientY-getPosition(canvas).y;
-                return{
-                    x:mx,
-                    y:my
+            
+            function collision(dx, dy){
+                if((((x+radius > bx && x+radius < bx+bwidth))||(x-radius > bx && (x-radius < bx+bwidth))) && (((y+radius > by && (y+radius < by+bheight)))||(y-radius > by && (y-radius < by+bheight)))){
+                    return true;
+                }
+            }
+            
+            
+            function getMousePos(canvas, evt) {
+                var rect = canvas.getBoundingClientRect();
+                return {
+                  x: evt.clientX,
+                  y: evt.clientY
                 };
             }
             
@@ -117,7 +110,7 @@
                 ctx.clearRect(0,0,canvas.width, canvas.height);
                 ctx.beginPath();
                 drawBall(canvas.width/8, canvas.height/2);
-                ctx.lineTo(mx, my);
+                ctx.lineTo(mousePos.x, mousePos.y);
                 ctx.stroke();
                 ctx.closePath();
                 drawTarget(bx, by);
@@ -125,11 +118,20 @@
             
             
             function start(){
-                dx=(mx-canvas.width/8);
-                dy=(my-canvas.height/2);
+                if(mousePos.x>canvas.width){
+                    mousePos.x=canvas.width;
+                }
+                if(mousePos.y>canvas.height){
+                    mousePos.y=canvas.height;
+                }
+                
+                
+                dx=bwidth*((mousePos.x-canvas.width/8)/(canvas.width));
+                dy=bwidth*(mousePos.y-canvas.height/2)/(canvas.height/2);
                 draw();
                 clearInterval(interval);
                 interval=setInterval(draw, 10);
+               document.getElementById("velocity").innerHTML="x:"+dx.toString() +"y:"+dy.toString();
             }
             
             document.addEventListener("keypress", function(e){
