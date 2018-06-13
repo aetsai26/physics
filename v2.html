@@ -15,6 +15,7 @@
     <body>
         <div id="container">
             <canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;"></canvas><br>
+            <button id="reset">reset</button>
         </div>
         <p>Press Space to Launch the ball</p>
         <p id="velocity"></p>
@@ -36,6 +37,7 @@
             var by=Math.random() * (canvas.height - canvas.height/2) + canvas.height/2;
             var gravity=(9.81)/100;
             var period=2*Math.PI*Math.sqrt(1/sConstant);
+            var interval;
             function drawBall(x, y){
             	ctx.beginPath();
             	ctx.arc(x,y,radius,0,2*Math.PI);
@@ -131,6 +133,10 @@
             }
             
             function init(){
+                y=canvas.height/2
+                dx=0;
+                dy=0;
+                document.getElementById("velocity").innerHTML="";
                 ctx.clearRect(0,0,canvas.width, canvas.height);
                 ctx.beginPath();
                 if(mousePos.x<canvas.width/4){
@@ -175,7 +181,6 @@
                document.removeEventListener("keypress", check);
             }
             
-            document.addEventListener("keypress", check);
             
             function check(e){
                  if(e.keyCode==32){
@@ -183,8 +188,18 @@
                 }
             }
         
+            function reset(){
+                clearInterval(interval);
+                interval=setInterval(init, 10);
+                document.addEventListener("keypress", check);
+            }
             
-            var interval=setInterval(init, 10);
+            window.onload=function(){
+                document.getElementById("reset").addEventListener("click", reset);
+                document.addEventListener("keypress", check);
+                reset();
+            }
+            
             
             
     
