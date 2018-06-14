@@ -19,6 +19,7 @@
         </div>
         <p>Press Space to Launch the ball</p>
         <p id="velocity"></p>
+        <p id="force"></p>
         <script type="text/javascript" >
             var canvas = document.getElementById("myCanvas");
             var ctx = canvas.getContext("2d");
@@ -107,7 +108,8 @@
                 
                 y+=dy;
                 x+=dx;
-                document.getElementById("velocity").innerHTML="vx:"+dx.toString() +"vy:"+dy.toString();
+                document.getElementById("velocity").innerHTML="vx:"+dx.toString() +" vy:"+dy.toString()+" (m/s)";
+                
             }
             
             
@@ -137,6 +139,7 @@
                 dx=0;
                 dy=0;
                 document.getElementById("velocity").innerHTML="";
+                document.getElementById("force").innerHTML="";
                 ctx.clearRect(0,0,canvas.width, canvas.height);
                 ctx.beginPath();
                 if(mousePos.x<canvas.width/4){
@@ -177,7 +180,8 @@
                 draw();
                 clearInterval(interval);
                 interval=setInterval(draw, 10);
-               document.getElementById("velocity").innerHTML="x:"+dx.toString() +"y:"+dy.toString();
+               document.getElementById("velocity").innerHTML="vx:"+dx.toString() +" vy:"+dy.toString();
+               document.getElementById("force").innerHTML="spring force: "+ String(sConstant*(canvas.width/4-sX))+" Newtons"
                document.removeEventListener("keypress", check);
             }
             
