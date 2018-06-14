@@ -35,7 +35,7 @@
             var mass=1;
             var mousePos=getMousePos(canvas, "mousemove");
             var bx=Math.random()*canvas.width;
-            var by=Math.random() * (canvas.height - canvas.height/2) + canvas.height/2;
+            var by=Math.random() * ((canvas.height*7/8) - canvas.height/2) + canvas.height/2;
             var gravity=(9.81)/100;
             var period=2*Math.PI*Math.sqrt(1/sConstant);
             var interval;
@@ -102,7 +102,7 @@
                 if(collision(dx, dy)){
                     dx=-(dx*restitution);
                     bx=Math.random()*canvas.width;
-                    by=Math.random() * (canvas.height - canvas.height/2) + canvas.height/2;
+                    by=Math.random() * ((canvas.height*9/10) - canvas.height/2) + canvas.height/2;
                 }
                 
                 
@@ -196,6 +196,8 @@
                 clearInterval(interval);
                 interval=setInterval(init, 10);
                 document.addEventListener("keypress", check);
+                bx=Math.random()*canvas.width;
+                by=Math.random() * ((canvas.height*9/10) - canvas.height/2) + canvas.height/2;
             }
             
             window.onload=function(){
