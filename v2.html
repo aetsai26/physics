@@ -108,7 +108,7 @@
                 
                 y+=dy;
                 x+=dx;
-                document.getElementById("velocity").innerHTML="vx:"+dx.toString() +" vy:"+dy.toString()+" (m/s)";
+                document.getElementById("velocity").innerHTML="vx:"+String(dx*100) +" vy:"+String(dy*100)+" (m/s)";
                 
             }
             
@@ -202,7 +202,7 @@
                 document.getElementById("reset").addEventListener("click", reset);
                 document.addEventListener("keypress", check);
                 reset();
-            }
+            };
             
             
             
