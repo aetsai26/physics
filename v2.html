@@ -32,12 +32,10 @@
             var restitution=.75;
             var dx=5;
             var dy=0;
-            var mass=1;
             var mousePos=getMousePos(canvas, "mousemove");
             var bx=Math.random()*canvas.width;
             var by=Math.random() * ((canvas.height*7/8) - canvas.height/2) + canvas.height/2;
             var gravity=(9.81)/100;
-            var period=2*Math.PI*Math.sqrt(1/sConstant);
             var interval;
             function drawBall(x, y){
             	ctx.beginPath();
@@ -173,7 +171,7 @@
                 
                 
                 //dx=(Math.abs(canvas.width/4-sX))*sConstant;
-                dx=(Math.sqrt(2*(sConstant*(canvas.width/4-sX))*(canvas.width/4-sX)))/100
+                dx=(Math.sqrt(2*(sConstant*(canvas.width/4-sX))*(canvas.width/4-sX)))/100;
                 console.log(canvas.width/4-sX);
                 dy=0;
                 x=sX;
@@ -181,7 +179,7 @@
                 clearInterval(interval);
                 interval=setInterval(draw, 10);
                document.getElementById("velocity").innerHTML="vx:"+dx.toString() +" vy:"+dy.toString();
-               document.getElementById("force").innerHTML="spring force: "+ String(sConstant*(canvas.width/4-sX))+" Newtons"
+               document.getElementById("force").innerHTML="spring force: "+ String(sConstant*(canvas.width/4-sX))+" Newtons";
                document.removeEventListener("keypress", check);
             }
             
