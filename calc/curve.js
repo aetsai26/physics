@@ -19,7 +19,6 @@ var back = false;
 var index=0;
 var area=0;
 var rWidth;
-
 function drawBall(x, y){
 	ctx.beginPath();
 	ctx.arc(x,y,radius,0,2*Math.PI);
@@ -89,19 +88,26 @@ canvas.addEventListener("mousemove", function(e){
 });
 
 function calculate(){
+    rCtx.fillStyle="red";
+    rCtx.fillRect(0,0,rCanvas.width, rCanvas.height);
+    rCtx.rect(0,0,rCanvas.width,rCanvas.height);
+    rCtx.stroke();
+    rCtx.clip();
+    rCtx.fillStyle='white';
+    rCtx.fillRect(0,0,400,400);
     var height
     for(var i=0; i<xBvalues.length-1; i++){
         if(yValues[i]>yBvalues[i]){
             //area=area+((yValues[i]-yBvalues[xBvalues.length-1-i])*rWidth);
             height=yValues[i]-yBvalues[i]
-            rCtx.rect(xBvalues[i], yBvalues[i], rWidth, height);
-            rCtx.stroke();
+            rCtx.clearRect(xBvalues[i], yBvalues[i], rWidth, height);
+            //rCtx.stroke();
         }
         else if (yValues[i]<yBvalues[i]){
             //area=area+((yBvalues[xBvalues.length-1-i]-yValues[i])*rWidth);
             height=yBvalues[i]-yValues[i];
-            rCtx.rect(xBvalues[i], yValues[i], rWidth, height);
-            rCtx.stroke();
+            rCtx.clearRect(xBvalues[i], yValues[i], rWidth, height);
+            //rCtx.stroke();
         }
         area+=height*rWidth;
     }
@@ -164,7 +170,26 @@ function round(num, places) {
     return Math.round(num * multiplier) / multiplier;
 }           
 
+
+function reset(){
+    clearInterval(interval);
+    x=bwidth;
+    y=canvas.height/2;  
+    xValues.length=0;
+    yValues.length=0;
+    xBvalues.length=0;
+    yBvalues.length=0;
+    back = false;
+    index=0;
+    area=0;
+    ctx.clearRect(0,0,400,400);
+    rCtx.clearRect(0,0,400,400);
+    init();
+    interval=setInterval(init, 10);
+}
+
 var interval=setInterval(init, 10);
+document.getElementById("reset").addEventListener("click", reset);
 
 
 
